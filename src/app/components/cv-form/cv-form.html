@@ -1,0 +1,113 @@
+<!-- cv-form.component.html -->
+<div class="form-section" *ngIf="step === 0">
+  <h2>Personal Info</h2>
+  <div class="field-grid">
+    <input [(ngModel)]="cvData.name" placeholder="Name">
+    <input [(ngModel)]="cvData.email" placeholder="Email">
+    <input [(ngModel)]="cvData.phone" placeholder="Phone">
+    <input [(ngModel)]="cvData.location" placeholder="Location">
+  </div>
+</div>
+
+<div class="form-section" *ngIf="step === 1">
+  <h2>About the Applicant</h2>
+  <textarea [(ngModel)]="cvData.summary" placeholder="A short personal description"></textarea>
+</div>
+
+<div class="form-section" *ngIf="step === 2">
+  <h2>Skills</h2>
+  <input [(ngModel)]="cvData.skills" placeholder="Comma-separated skills">
+</div>
+
+<div class="form-section" *ngIf="step === 3">
+  <h2>Education</h2>
+  <div class="cards-grid">
+    <div *ngFor="let edu of cvData.education; let i = index" class="education-card">
+      <div class="card-heading">
+        <span>Education {{ i + 1 }}</span>
+        <button type="button" class="card-delete" (click)="deleteEducation(i)">🗑 Delete</button>
+      </div>
+      <div class="field-grid">
+        <input [(ngModel)]="edu.school" placeholder="School / University">
+        <input [(ngModel)]="edu.degree" placeholder="Degree / Qualification">
+      </div>
+      <div class="field-grid">
+        <input [(ngModel)]="edu.field" placeholder="Field of Study">
+        <div class="month-field">
+          <span class="month-hint">MM/YYYY</span>
+          <input type="month" [(ngModel)]="edu.startDate" [attr.min]="minDate" [attr.max]="maxDate">
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="month-field">
+          <span class="month-hint">MM/YYYY</span>
+          <input type="month" [(ngModel)]="edu.endDate" [attr.min]="minDate" [attr.max]="maxDate">
+        </div>
+      </div>
+    </div>
+  </div>
+  <button (click)="addEducation()">+ Add Education</button>
+</div>
+
+<div class="form-section" *ngIf="step === 4">
+  <h2>Experience</h2>
+  <div class="cards-grid">
+    <div *ngFor="let exp of cvData.experience; let i = index" class="experience-card">
+      <div class="card-heading">
+        <span>Experience {{ i + 1 }}</span>
+        <button type="button" class="card-delete" (click)="deleteExperience(i)">🗑 Delete</button>
+      </div>
+      <div class="field-grid">
+        <input [(ngModel)]="exp.title" placeholder="Job Title">
+        <input [(ngModel)]="exp.company" placeholder="Company">
+      </div>
+      <div class="field-grid">
+        <div class="month-field">
+          <span class="month-hint">MM/YYYY</span>
+          <input type="month" [(ngModel)]="exp.startDate" [attr.min]="minDate" [attr.max]="maxDate">
+        </div>
+        <div class="month-field">
+          <span class="month-hint">MM/YYYY</span>
+          <input type="month" [(ngModel)]="exp.endDate" [attr.min]="minDate" [attr.max]="maxDate">
+        </div>
+      </div>
+    </div>
+  </div>
+  <button (click)="addExperience()">+ Add Experience</button>
+</div>
+
+<div class="form-section review-section" *ngIf="step === 5">
+  <h2>Review Your CV</h2>
+  <div class="review-block">
+    <h3>Personal Info</h3>
+    <p><strong>Name:</strong> {{ cvData.name || '—' }}</p>
+    <p><strong>Email:</strong> {{ cvData.email || '—' }}</p>
+    <p><strong>Phone:</strong> {{ cvData.phone || '—' }}</p>
+    <p><strong>Location:</strong> {{ cvData.location || '—' }}</p>
+  </div>
+  <div class="review-block">
+    <h3>About</h3>
+    <p>{{ cvData.summary || 'No summary provided.' }}</p>
+  </div>
+  <div class="review-block">
+    <h3>Skills</h3>
+    <p>{{ cvData.skills || 'No skills provided.' }}</p>
+  </div>
+  <div class="review-block">
+    <h3>Education</h3>
+    <div *ngFor="let edu of cvData.education; let i = index" class="review-item">
+      <p><strong>Entry {{ i + 1 }}:</strong></p>
+      <p>{{ edu.degree || '—' }}{{ edu.field ? ' in ' + edu.field : '' }}</p>
+      <p>{{ edu.school || '—' }}</p>
+      <p>{{ formatMonthYear(edu.startDate) || '—' }} — {{ formatMonthYear(edu.endDate) || '—' }}</p>
+    </div>
+  </div>
+  <div class="review-block">
+    <h3>Experience</h3>
+    <div *ngFor="let exp of cvData.experience; let i = index" class="review-item">
+      <p><strong>Entry {{ i + 1 }}:</strong></p>
+      <p>{{ exp.title || '—' }} at {{ exp.company || '—' }}</p>
+      <p>{{ formatMonthYear(exp.startDate) || '—' }} — {{ formatMonthYear(exp.endDate) || '—' }}</p>
+    </div>
+  </div>
+</div>

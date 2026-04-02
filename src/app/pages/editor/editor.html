@@ -1,0 +1,11 @@
+<!-- editor.component.html -->
+<div *ngIf="loading">Generating CV...</div>
+
+<div class="editor" *ngIf="!loading && cvData">
+  <div class="left">
+    <app-cv-form [cvData]="cvData"></app-cv-form>
+  </div>
+  <div class="right">
+    <app-cv-preview [cvData]="cvData"></app-cv-preview>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="form-panel">
+  <div class="stepper">
+    <button
+      type="button"
+      *ngFor="let label of stepLabels; let i = index"
+      [class.active]="step === i"
+      (click)="setStep(i)">
+      {{ label }}
+    </button>
+  </div>
+
+  <div class="validation-error" *ngIf="personalInfoError && step === 0">
+    {{ personalInfoError }}
+  </div>
+
+  <app-cv-form [cvData]="cvData" [step]="step"></app-cv-form>
+  <div class="step-buttons">
+    <button *ngIf="step > 0" type="button" (click)="prevStep()">Back</button>
+    <button
+      *ngIf="step < stepLabels.length - 1"
+      type="button"
+      (click)="nextStep()">
+      Next
+    </button>
+    <button
+      *ngIf="step === stepLabels.length - 1"
+      type="button"
+      (click)="submitForm()">
+      Submit
+    </button>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<div class="chat-box">
+  <textarea [(ngModel)]="inputText"
+            (keydown.enter)="onGenerate(); $event.preventDefault()"
+            placeholder="Type your CV..."></textarea>
+
+  <button (click)="onGenerate()">Send</button>
+</div>
