@@ -16,7 +16,21 @@
 
 <div class="form-section" *ngIf="step === 2">
   <h2>Skills</h2>
-  <input [(ngModel)]="cvData.skills" placeholder="Comma-separated skills">
+  <div class="skill-entry">
+    <input [(ngModel)]="skillInput" placeholder="Enter a skill" />
+    <button type="button" (click)="addSkill()">Add Skill</button>
+  </div>
+  <div class="skills-list" *ngIf="cvData.skills?.length; else noSkills">
+    <ul class="skills-inline">
+      <li *ngFor="let skill of cvData.skills; let i = index">
+        {{ skill }}
+        <button type="button" class="skill-remove" (click)="removeSkill(i)">Remove</button>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noSkills>
+    <p>No skills added yet.</p>
+  </ng-template>
 </div>
 
 <div class="form-section" *ngIf="step === 3">
@@ -91,7 +105,12 @@
   </div>
   <div class="review-block">
     <h3>Skills</h3>
-    <p>{{ cvData.skills || 'No skills provided.' }}</p>
+    <ul *ngIf="cvData.skills?.length; else reviewNoSkills">
+      <li *ngFor="let skill of cvData.skills">{{ skill }}</li>
+    </ul>
+    <ng-template #reviewNoSkills>
+      <p>No skills provided.</p>
+    </ng-template>
   </div>
   <div class="review-block">
     <h3>Education</h3>
