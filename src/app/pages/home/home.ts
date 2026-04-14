@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CvForm } from '../../components/cv-form/cv-form';
 import { AiService } from '../../services/ai';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,7 @@ export class Home {
     phone: '',
     location: '',
     summary: '',
-    skills: '',
+    skills: [],
     education: [{
       school: '',
       degree: '',
@@ -39,7 +40,7 @@ export class Home {
     }]
   };
 
-  constructor(private aiservice: AiService) {}
+  constructor(private aiservice: AiService, private router: Router) {}
 
   prevStep() {
     if (this.step > 0) {
@@ -93,21 +94,78 @@ export class Home {
   }
 
   submitForm() {
-    if (!this.validatePersonalInfo()) {
-      return;
-    }
-    // Placeholder submit action: add your save/send logic here.
-    console.log('CV submitted', this.cvData);
-
-    this.aiservice.generateCV(JSON.stringify(this.cvData)).subscribe({
-      next: (response) => {
-        console.log('CV submitted successfully', response);
-        alert('Your CV form has been submitted successfully!');
-      },
-      error: (error) => {
-        console.error('Error submitting CV', error);
-        alert('There was an error submitting your CV. Please try again.');
-      }
-    });
+  if (!this.validatePersonalInfo()) {
+    return;
   }
+
+  const payload = this.formatCvToText(this.cvData);
+
+  this.aiservice.generateCV(payload).subscribe({
+    next: (response: any) => {
+
+      // ✅ Extract AI text
+      let cleanText = '';
+
+      if (response?.content?.length > 0) {
+        cleanText = response.content[0].text;
+      } else {
+        cleanText = JSON.stringify(response);
+      }
+
+      // ✅ Remove ```json
+      cleanText = cleanText
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
+
+      // ✅ Convert to JSON
+      let parsedCv;
+      try {
+        parsedCv = JSON.parse(cleanText);
+      } catch (e) {
+        console.error('JSON parse error', e);
+        alert('Invalid response from AI');
+        return;
+      }
+
+      // ✅ Navigate to review page
+      this.router.navigate(['/review'], {
+        state: { cvData: parsedCv }
+      });
+
+    },
+    error: (error) => {
+      console.error('Error submitting CV', error);
+      alert('There was an error submitting your CV.');
+    }
+  });
+}
+
+formatCvToText(data: any): string {
+  const cv = data.text || data; // ✅ handles both cases
+
+  return `
+${cv?.name || ''} ${cv?.email || ''} | ${cv?.phone || ''} | ${cv?.location || ''},
+
+Profile
+${cv?.summary || ''}
+
+Skills
+${Array.isArray(cv?.skills) ? cv.skills.join(', ') : cv?.skills || ''}
+
+Education
+${(cv?.education || []).map((e: any) =>
+  `${e.startDate || ''} - ${e.endDate || ''}, ${e.degree || ''} in ${e.field || ''}, ${e.school || ''}`
+).join(' ')}
+
+Work Experience
+${(cv?.experience || []).map((exp: any) =>
+  `${exp.startDate || ''} - ${exp.endDate || ''}, ${exp.title || ''}, ${exp.company || ''}. ${exp.description || ''}`
+).join(' ')}
+`
+    .replace(/\r?\n|\r/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 }

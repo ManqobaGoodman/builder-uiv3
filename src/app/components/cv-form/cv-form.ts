@@ -13,6 +13,7 @@ export class CvForm {
   // cv-form.component.ts
   @Input() cvData: any;
   @Input() step = 0;
+  skillInput = '';
 
   minDate = '1980-01';
   maxDate = new Date().toISOString().slice(0, 7);
@@ -48,6 +49,27 @@ export class CvForm {
       return '';
     }
     return `${year}-${month}`;
+  }
+
+  addSkill() {
+    const skill = this.skillInput?.trim();
+    if (!skill) {
+      return;
+    }
+    if (!this.cvData.skills) {
+      this.cvData.skills = [];
+    }
+    if (!this.cvData.skills.includes(skill)) {
+      this.cvData.skills.push(skill);
+    }
+    this.skillInput = '';
+  }
+
+  removeSkill(index: number) {
+    if (!this.cvData.skills) {
+      return;
+    }
+    this.cvData.skills.splice(index, 1);
   }
 
   addExperience() {

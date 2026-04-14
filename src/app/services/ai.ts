@@ -9,6 +9,7 @@ export class AiService {
   private apiUrl = 'http://localhost:8080/api/ai/analyze';
 
   constructor(private http: HttpClient) {}
+  
 
   generateCV(text: string) {
     return this.http.post<any>(this.apiUrl, {

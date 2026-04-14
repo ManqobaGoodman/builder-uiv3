@@ -9,7 +9,12 @@
   <h2>About</h2>
   <p>{{ cvData.summary }}</p>
   <h2>Skills</h2>
-  <p>{{ cvData.skills }}</p>
+  <ul class="skills-inline" *ngIf="cvData.skills?.length; else previewNoSkills">
+    <li *ngFor="let skill of cvData.skills">{{ skill }}</li>
+  </ul>
+  <ng-template #previewNoSkills>
+    <p>No skills listed.</p>
+  </ng-template>
   <h2>Education</h2>
   <div *ngFor="let edu of cvData.education">
     <h3>{{ edu.degree }}{{ edu.field ? ' in ' + edu.field : '' }}</h3>

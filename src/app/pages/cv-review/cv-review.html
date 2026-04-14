@@ -1,0 +1,86 @@
+<div #cvContainer class="cv-container" *ngIf="cvData">
+
+  <!-- HEADER -->
+  <div class="cv-header">
+    <h1>{{ cvData.name || 'Your Name' }}</h1>
+
+    <p class="contact">
+      <span *ngIf="cvData.email">{{ cvData.email }}</span>
+      <span *ngIf="cvData.phone"> | {{ cvData.phone }}</span>
+      <span *ngIf="cvData.location"> | {{ cvData.location }}</span>
+    </p>
+  </div>
+
+  <!-- SUMMARY -->
+  <div *ngIf="cvData.summary">
+    <h2>Summary</h2>
+    <p>{{ cvData.summary }}</p>
+  </div>
+
+  <!-- SKILLS -->
+  <div *ngIf="cvData.skills?.length">
+    <h2>Skills</h2>
+    <ul>
+      <li *ngFor="let skill of cvData.skills">
+        {{ skill }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <div *ngIf="cvData.experience?.length">
+    <h2>Experience</h2>
+
+    <div *ngFor="let exp of cvData.experience" class="exp-block">
+
+      <h3>
+        {{ exp.title || 'Role' }}
+        <span *ngIf="exp.company"> - {{ exp.company }}</span>
+      </h3>
+
+      <p class="meta">
+        <span *ngIf="exp.duration">{{ exp.duration }}</span>
+        <span *ngIf="exp.start_date">
+          {{ exp.start_date }} - {{ exp.end_date || 'Present' }}
+        </span>
+        <span *ngIf="exp.location"> | {{ exp.location }}</span>
+      </p>
+
+      <ul *ngIf="exp.responsibilities?.length">
+        <li *ngFor="let r of exp.responsibilities">
+          {{ r }}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div *ngIf="cvData.education?.length">
+    <h2>Education</h2>
+
+    <div *ngFor="let edu of cvData.education" class="edu-block">
+
+      <p>
+        <strong>{{ edu.degree || '' }}</strong>
+        <span *ngIf="edu.institution"> - {{ edu.institution }}</span>
+      </p>
+
+      <p class="meta">
+        <span *ngIf="edu.duration">{{ edu.duration }}</span>
+        <span *ngIf="edu.start_date">
+          {{ edu.start_date }} - {{ edu.graduation_date || edu.endDate }}
+        </span>
+        <span *ngIf="edu.location"> | {{ edu.location }}</span>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- ACTIONS (EXCLUDED FROM EXPORT) -->
+  <div class="actions no-export">
+    <button (click)="downloadPDF()">Download PDF</button>
+    <button (click)="downloadWord()">Download Word</button>
+  </div>
+
+</div>

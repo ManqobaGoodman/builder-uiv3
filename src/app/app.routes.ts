@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
 import { Editor } from './pages/editor/editor';
+import { CvReview } from './pages/cv-review/cv-review';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  { path: 'editor', component: Editor }
+  { path: 'editor', component: Editor },
+  {path: 'review',component: CvReview}
 ];

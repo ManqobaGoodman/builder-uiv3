@@ -9,6 +9,57 @@
   color: #1e293b;
 }
 
+.skill-entry {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.skill-entry input {
+  flex: 1 1 220px;
+  min-width: 160px;
+}
+
+.skill-entry button {
+  min-width: 88px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.88rem;
+}
+
+.skills-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.skills-inline li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #0f172a;
+  font-size: 0.88rem;
+}
+
+.skill-remove {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 0;
+  size: 0.75rem;
+}
+
+.skill-remove:hover {
+  text-decoration: underline;
+}
+
 .review-section {
   gap: 1.25rem;
 }
