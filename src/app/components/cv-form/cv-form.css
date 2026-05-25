@@ -229,3 +229,33 @@
 .form-section button:hover {
   background: #eff6ff;
 }
+
+.job-target-section {
+  margin-top: 30px;
+}
+
+.job-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.job-description-box {
+  margin-top: 20px;
+}
+
+.job-description-box h3 {
+  margin-bottom: 10px;
+}
+
+.job-description-box textarea {
+  width: 100%;
+  min-height: 180px;
+  border: 1px solid #d9d9d9;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 14px;
+  resize: vertical;
+}

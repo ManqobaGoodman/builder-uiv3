@@ -10,10 +10,12 @@ export class AiService {
 
   constructor(private http: HttpClient) {}
   
+  generateCV(text: string, jobDescription?: string) {
 
-  generateCV(text: string) {
-    return this.http.post<any>(this.apiUrl, {
-      text: text   // ✅ MUST match backend
-    });
-  }
+  return this.http.post<any>(this.apiUrl, {
+      text,
+      jobDescription
+    }
+  );
+}
 }
