@@ -40,7 +40,11 @@ export class Home {
     }]
   };
 
-  constructor(private aiservice: AiService, private router: Router) {}
+  jobDescription = '';
+
+  useJobDescription = false;
+
+  constructor(private aiservice: AiService, private router: Router) { }
 
   prevStep() {
     if (this.step > 0) {
@@ -99,26 +103,34 @@ export class Home {
   }
 
   const payload = this.formatCvToText(this.cvData);
+  // ✅ Clean job description — remove bullets, dots, extra whitespace
+const cleanJobDescription = this.useJobDescription
+  ? this.jobDescription
+      .replace(/```json/g, '')
+      .replace(/```/g, '')
+      .replace(/▪/g, '')              // remove bullet symbols
+      .replace(/•/g, '')              // remove bullet dots
+      .replace(/^\s*[\-\*]\s*/gm, '') // remove dash/star bullets
+      .replace(/\n/g, ' ')            // ✅ remove newlines — join into single line
+      .replace(/\s{2,}/g, ' ')        // remove multiple spaces
+      .trim()
+  : '';
 
-  this.aiservice.generateCV(payload).subscribe({
+  this.aiservice.generateCV(payload, cleanJobDescription).subscribe({
     next: (response: any) => {
-
-      // ✅ Extract AI text
       let cleanText = '';
-
       if (response?.content?.length > 0) {
         cleanText = response.content[0].text;
       } else {
         cleanText = JSON.stringify(response);
       }
 
-      // ✅ Remove ```json
+      // ✅ Clean AI response
       cleanText = cleanText
         .replace(/```json/g, '')
         .replace(/```/g, '')
         .trim();
 
-      // ✅ Convert to JSON
       let parsedCv;
       try {
         parsedCv = JSON.parse(cleanText);
@@ -128,11 +140,9 @@ export class Home {
         return;
       }
 
-      // ✅ Navigate to review page
       this.router.navigate(['/review'], {
         state: { cvData: parsedCv }
       });
-
     },
     error: (error) => {
       console.error('Error submitting CV', error);
@@ -141,10 +151,10 @@ export class Home {
   });
 }
 
-formatCvToText(data: any): string {
-  const cv = data.text || data; // ✅ handles both cases
+  formatCvToText(data: any): string {
+    const cv = data.text || data; // ✅ handles both cases
 
-  return `
+    return `
 ${cv?.name || ''} ${cv?.email || ''} | ${cv?.phone || ''} | ${cv?.location || ''},
 
 Profile
@@ -155,17 +165,17 @@ ${Array.isArray(cv?.skills) ? cv.skills.join(', ') : cv?.skills || ''}
 
 Education
 ${(cv?.education || []).map((e: any) =>
-  `${e.startDate || ''} - ${e.endDate || ''}, ${e.degree || ''} in ${e.field || ''}, ${e.school || ''}`
-).join(' ')}
+      `${e.startDate || ''} - ${e.endDate || ''}, ${e.degree || ''} in ${e.field || ''}, ${e.school || ''}`
+    ).join(' ')}
 
 Work Experience
 ${(cv?.experience || []).map((exp: any) =>
-  `${exp.startDate || ''} - ${exp.endDate || ''}, ${exp.title || ''}, ${exp.company || ''}. ${exp.description || ''}`
-).join(' ')}
+      `${exp.startDate || ''} - ${exp.endDate || ''}, ${exp.title || ''}, ${exp.company || ''}. ${exp.description || ''}`
+    ).join(' ')}
 `
-    .replace(/\r?\n|\r/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+      .replace(/\r?\n|\r/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
 }

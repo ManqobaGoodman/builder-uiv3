@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -17,6 +17,12 @@ export class CvForm {
 
   minDate = '1980-01';
   maxDate = new Date().toISOString().slice(0, 7);
+
+  @Input() useJobDescription = false;
+  @Output() useJobDescriptionChange = new EventEmitter<boolean>();
+
+  @Input() jobDescription = '';
+  @Output() jobDescriptionChange = new EventEmitter<string>();
 
   formatMonthYear(value: string) {
     if (!value) {

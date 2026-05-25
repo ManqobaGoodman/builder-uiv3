@@ -13,7 +13,15 @@
     {{ personalInfoError }}
   </div>
 
-  <app-cv-form [cvData]="cvData" [step]="step"></app-cv-form>
+  <!--<app-cv-form [cvData]="cvData" [step]="step"></app-cv-form>-->
+  <app-cv-form
+  [cvData]="cvData"
+  [step]="step"
+  [(useJobDescription)]="useJobDescription"
+  [(jobDescription)]="jobDescription"
+  ngSkipHydration>
+</app-cv-form>
+
   <div class="step-buttons">
     <button *ngIf="step > 0" type="button" (click)="prevStep()">Back</button>
     <button
